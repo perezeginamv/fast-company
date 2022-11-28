@@ -12,7 +12,9 @@ const Users = () => {
     if (
       (lastTwoDigits !== "12" &&
         arrayLetters[arrayLetters.length - 1] === "2") ||
-      (lastTwoDigits !== "13" && arrayLetters[arrayLetters.length - 1] === "3")
+      (lastTwoDigits !== "13" &&
+        arrayLetters[arrayLetters.length - 1] === "3") ||
+      (lastTwoDigits !== "14" && arrayLetters[arrayLetters.length - 1] === "4")
     ) {
       return "человека тусанут";
     }
