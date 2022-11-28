@@ -80,4 +80,3 @@ const Users = () => {
 };
 
 export default Users;
-console.log("Привет");
