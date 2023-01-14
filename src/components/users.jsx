@@ -9,13 +9,14 @@ import SearchStatus from "./searchStatus";
 
 const Users = ({ users, ...rest }) => {
     const pageSize = 4;
+    const handlePageChange = (pageIndex) => {
+        setCurrentPage(pageIndex);
+    };
 
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
-    const handlePageChange = (pageIndex) => {
-        setCurrentPage(pageIndex);
-    };
+
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedProf]);
@@ -23,11 +24,17 @@ const Users = ({ users, ...rest }) => {
     useEffect(() => {
         api.professions.fetchAll().then((date) => setProfession(date));
     }, []);
+
     const handleProfessionSelect = (item) => {
         setSelectedProf(item);
     };
+
     const filteredUsers = selectedProf
-        ? users.filter((user) => user.profession === selectedProf)
+        ? users.filter(
+              (user) =>
+                  JSON.stringify(user.profession) ===
+                  JSON.stringify(selectedProf)
+          )
         : users;
     const count = filteredUsers.length;
     const userGrop = paginate(filteredUsers, currentPage, pageSize);
