@@ -8,7 +8,7 @@ const UserTable = ({
     users,
     onSort,
     selectedSort,
-    updateStatus,
+    onToggleBookMark,
     onDelete,
     ...rest
 }) => {
@@ -30,7 +30,7 @@ const UserTable = ({
             component: (user) => (
                 <BookMark
                     status={user.bookmark}
-                    onClick={() => updateStatus(user._id)}
+                    onClick={() => onToggleBookMark(user._id)}
                 />
             )
         },
@@ -59,7 +59,7 @@ UserTable.propTypes = {
     users: PropTypes.array.isRequired,
     onSort: PropTypes.func.isRequired,
     selectedSort: PropTypes.object.isRequired,
-    updateStatus: PropTypes.func.isRequired,
+    onToggleBookMark: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired
 };
 

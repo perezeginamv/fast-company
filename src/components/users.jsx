@@ -15,7 +15,7 @@ const Users = () => {
     useEffect(() => {
         api.users.fetchAll().then((date) => setUsers(date));
     }, []);
-    console.log(users);
+
     const handleDelete = (userId) => {
         setUsers(users.filter((item) => item._id !== userId));
     };
@@ -38,7 +38,10 @@ const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
-    const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
+    const [sortBy, setSortBy] = useState({
+        iter: "name",
+        order: "asc"
+    });
 
     useEffect(() => {
         setCurrentPage(1);
