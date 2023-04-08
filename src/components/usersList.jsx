@@ -8,7 +8,7 @@ import SearchStatus from "./searchStatus";
 import UserTable from "./usersTable";
 import _ from "lodash";
 
-const Users = () => {
+const UsersList = () => {
     const pageSize = 8;
 
     const [users, setUsers] = useState();
@@ -125,8 +125,8 @@ GroupList.defaultProps = {
     valueProperty: "_id",
     contentProperty: "name"
 };
-Users.propTypes = {
+UsersList.propTypes = {
     users: PropTypes.array
 };
 
-export default Users;
+export default UsersList;
