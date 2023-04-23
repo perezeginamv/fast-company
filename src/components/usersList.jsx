@@ -42,31 +42,44 @@ const UsersList = () => {
         iter: "name",
         order: "asc"
     });
+    const [searchQuery, setSearchQuery] = useState("");
+    const handleSearchQuery = ({ target }) => {
+        setSelectedProf(undefined);
+        setSearchQuery(target.value);
+    };
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedProf]);
+    }, [selectedProf, searchQuery]);
 
     useEffect(() => {
         api.professions.fetchAll().then((date) => setProfession(date));
     }, []);
 
     const handleProfessionSelect = (item) => {
+        if (searchQuery !== "") setSearchQuery("");
         setSelectedProf(item);
     };
-
     const handleSort = (item) => {
         setSortBy(item);
     };
 
     if (users) {
-        const filteredUsers = selectedProf
+        const filteredUsers = searchQuery
+            ? users.filter(
+                  (user) =>
+                      user.name
+                          .toLowerCase()
+                          .indexOf(searchQuery.toLocaleLowerCase()) !== -1
+              )
+            : selectedProf
             ? users.filter(
                   (user) =>
                       JSON.stringify(user.profession) ===
                       JSON.stringify(selectedProf)
               )
             : users;
+
         const count = filteredUsers.length;
         const sortedUsers = _.orderBy(
             filteredUsers,
@@ -78,6 +91,7 @@ const UsersList = () => {
         const clearFilter = () => {
             setSelectedProf();
         };
+
         return (
             <div className="d-flex">
                 {professions && (
@@ -87,6 +101,7 @@ const UsersList = () => {
                             items={professions}
                             onItemSelect={handleProfessionSelect}
                         />
+
                         <button
                             onClick={clearFilter}
                             className="btn btn-secondary mt-2"
@@ -98,6 +113,16 @@ const UsersList = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
+                    <form className="d-flex">
+                        <input
+                            className="form-control me-2"
+                            type="search"
+                            placeholder="Search..."
+                            aria-label="Search"
+                            onChange={handleSearchQuery}
+                            value={searchQuery}
+                        ></input>
+                    </form>
                     {count > 0 && (
                         <UserTable
                             users={userGrop}
