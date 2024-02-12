@@ -1,5 +1,5 @@
 import React from "react";
-import { renderPhrase } from "../utils/utils";
+import { renderPhrase } from "../../utils/utils";
 import PropTypes from "prop-types";
 
 const SearchStatus = ({ length }) => {
