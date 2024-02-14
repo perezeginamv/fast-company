@@ -16,7 +16,7 @@ const SelectField = ({
                   value: options[optionName]._id
               }))
             : options;
-    console.log(value);
+
     const getInputClasses = () => {
         return "form-select" + (error ? " is-invalid" : "");
     };
