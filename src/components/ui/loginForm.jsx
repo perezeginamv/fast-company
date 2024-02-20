@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxFieald from "../common/form/checkBoxField";
+// import * as yup from "yup"; // библиотека YUP
 
 const LoginForm = () => {
     const [data, setDate] = useState({
@@ -16,6 +17,32 @@ const LoginForm = () => {
             [target.name]: target.value
         }));
     };
+    // Пример валидации на библиотеке YUP
+    // const validateSchema = yup.object().shape({
+    //     password: yup
+    //         .string()
+    //         .required("Пароль обязателен для заполнения")
+    //         .matches(
+    //             /(?=.*[A-Z])/,
+    //             "Пароль должен содержать хотя бы одну заглавную букву"
+    //         )
+    //         .matches(
+    //             /(?=.*[0-9])/,
+    //             "Пароль должень содержать хотя бы одну цыфру"
+    //         )
+    //         .matches(
+    //             /(?=.*[!@#&%^&*])/,
+    //             "Пароль должен содержать один из специальных символов ! @ # & % ^ & *"
+    //         )
+    //         .matches(
+    //             /(?=.{8,})/,
+    //             "Пароль должень состоять минимум из 8 символов"
+    //         ),
+    //     email: yup
+    //         .string()
+    //         .required("Электронная почта обязательна для заполнения")
+    //         .email("Email введен некорректно")
+    // });
 
     const validatorConfig = {
         email: {
@@ -47,6 +74,11 @@ const LoginForm = () => {
     }, [data]);
     const validate = () => {
         const errors = validator(data, validatorConfig);
+        // Для примера реализация валидации на YUP
+        // validateSchema
+        //     .validate(data)
+        //     .then(() => setErrors({}))
+        //     .catch((err) => setErrors({ [err.path]: err.message }));
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
