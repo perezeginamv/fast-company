@@ -12,10 +12,7 @@ const SelectField = ({
 }) => {
     const optionsArray =
         !Array.isArray(options) && typeof options === "object"
-            ? Object.keys(options).map((optionName) => ({
-                  name: options[optionName].name,
-                  value: options[optionName]._id
-              }))
+            ? Object.values(options)
             : options;
 
     const getInputClasses = () => {
@@ -43,7 +40,7 @@ const SelectField = ({
                 {optionsArray &&
                     optionsArray.map((option) => (
                         <option key={option.value} value={option.value}>
-                            {option.name}
+                            {option.label}
                         </option>
                     ))}
             </select>
