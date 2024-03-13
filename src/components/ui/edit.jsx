@@ -12,10 +12,8 @@ const Edit = () => {
     const [user, setUser] = useState();
     const [professions, setProfession] = useState();
     const [qualities, setQualities] = useState([]);
-    const [data, setData] = useState();
 
     useEffect(() => {
-        api.users.fetchAll().then((data) => setData(data));
         api.users.getById(usersId).then((data) => {
             setUser(() => ({
                 ...data,
@@ -54,10 +52,21 @@ const Edit = () => {
     };
 
     const updateData = () => {
-        // api.users.update(usersId, data);
+        const userData = {
+            ...user,
+            profession: {
+                name: user.profession,
+                _id: professions.find((el) => el.label === user.profession).name
+            },
+            qualities: user.qualities.map((qualitie) => ({
+                name: qualitie.label,
+                _id: qualitie.value,
+                color: qualitie.color
+            }))
+        };
+        api.users.update(usersId, userData);
 
-        console.log(data);
-        // console.log(user);
+        console.log(userData);
     };
 
     return (
