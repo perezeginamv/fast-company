@@ -11,6 +11,7 @@ const EditUserPage = () => {
     const { userId } = useParams();
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(false);
+
     const [data, setData] = useState({
         name: "",
         email: "",
