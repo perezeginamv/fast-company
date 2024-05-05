@@ -8,18 +8,53 @@ const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
     const [comments, setComments] = useState();
+    const [users, setUsers] = useState();
     useEffect(() => {
+        api.users.fetchAll().then((data) => setUsers(data));
         api.users.getById(userId).then((data) => setUser(data));
         api.comments
             .fetchCommentsForUser(userId)
             .then((comments) => setComments(comments));
     }, []);
 
-    console.log(comments);
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
     };
-    if (user) {
+
+    const getName = (id) => {
+        const usersId = users.find((user) => user._id === id);
+        return usersId.name;
+    };
+
+    const getDate = (date) => {
+        const currentDate = new Date(Date.now());
+        const dd = new Date(Number(date));
+        const timeInterval = Math.floor(
+            (currentDate - dd) / (1000 * 60 * 60 * 24)
+        );
+        // const year = timeInterval.getFullYear().toString();
+
+        // const creatCommentDate = new Date(Number(date));
+        // const year = creatCommentDate.getFullYear().toString();
+        // const month = creatCommentDate.toLocaleString("en-us", {
+        //     month: "long"
+        // });
+        // const day = creatCommentDate.getDay().toString();
+
+        console.log(timeInterval);
+
+        // const convertedDate = ` - ${day} ${month}`;
+        // return convertedDate;
+    };
+
+    const deletingСomment = (id) => {
+        api.comments.remove(id);
+        api.comments
+            .fetchCommentsForUser(userId)
+            .then((comments) => setComments(comments));
+    };
+
+    if (user && users) {
         return (
             <div className="container">
                 <div className="row gutters-sm">
@@ -163,81 +198,80 @@ const UserPage = ({ userId }) => {
                                 <div className="card-body">
                                     <h2>Comments</h2>
                                     <hr />
-                                    <div className="bg-light card-body mb-3">
-                                        <div className="row">
-                                            <div className="col">
-                                                <div className="d-flex flex-start">
-                                                    <img
-                                                        src="https://avatars.dicebear.com/api/avataaars/qweqasdas.svg"
-                                                        className="
-                                                    rounded-circle
-                                                    shadow-1-strong
-                                                    me-3
-                                                "
-                                                        alt="avatar"
-                                                        width="65"
-                                                        height="65"
-                                                    />
-                                                    <div
-                                                        className="
-                                                    flex-grow-1 flex-shrink-1
-                                                "
-                                                    >
-                                                        <div className="mb-4">
-                                                            <div
-                                                                className="
-                                                            d-flex
-                                                            justify-content-between
-                                                            align-items-center
-                                                        "
-                                                            >
-                                                                <p className="mb-1">
-                                                                    Джон Дориан
-                                                                    <span className="small">
-                                                                        5 минут
-                                                                        назад
-                                                                    </span>
-                                                                </p>
-                                                                <button
+                                    {comments.map((user) => (
+                                        <div
+                                            className="bg-light card-body mb-3"
+                                            key={user._id}
+                                        >
+                                            <div className="row">
+                                                <div className="col">
+                                                    <div className="d-flex flex-start">
+                                                        <img
+                                                            src="https://api.dicebear.com/8.x/avataaars/svg?seed=Felix"
+                                                            className="
+                                                                                    rounded-circle
+                                                                                    shadow-1-strong
+                                                                                    me-3
+                                                                                "
+                                                            alt="avatar"
+                                                            width="65"
+                                                            height="65"
+                                                        />
+                                                        <div
+                                                            className="
+                                                                                    flex-grow-1 flex-shrink-1
+                                                                                "
+                                                        >
+                                                            <div className="mb-4">
+                                                                <div
                                                                     className="
-                                                                btn btn-sm
-                                                                text-primary
-                                                                d-flex
-                                                                align-items-center
-                                                            "
+                                                                                            d-flex
+                                                                                            justify-content-between
+                                                                                            align-items-center
+                                                                                        "
                                                                 >
-                                                                    <i
+                                                                    <p className="mb-1">
+                                                                        {getName(
+                                                                            user.userId
+                                                                        )}
+                                                                        <span className="small">
+                                                                            {getDate(
+                                                                                user.created_at
+                                                                            )}
+                                                                        </span>
+                                                                    </p>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            deletingСomment(
+                                                                                user._id
+                                                                            );
+                                                                        }}
                                                                         className="
-                                                                    bi bi-x-lg
-                                                                "
-                                                                    ></i>
-                                                                </button>
+                                                                                                btn btn-sm
+                                                                                                text-primary
+                                                                                                d-flex
+                                                                                                align-items-center
+                                                                                            "
+                                                                    >
+                                                                        <i
+                                                                            className="
+                                                                                                    bi bi-x-lg
+                                                                                                "
+                                                                        ></i>
+                                                                    </button>
+                                                                </div>
+                                                                <p className="small mb-0">
+                                                                    {
+                                                                        user.content
+                                                                    }
+                                                                </p>
                                                             </div>
-                                                            <p className="small mb-0">
-                                                                Lorem ipsum
-                                                                dolor sit amet
-                                                                consectetur
-                                                                adipisicing
-                                                                elit. Corporis,
-                                                                soluta facilis
-                                                                fugit hic quasi
-                                                                sapiente
-                                                                accusamus quia
-                                                                voluptatem
-                                                                dolorum
-                                                                laboriosam id
-                                                                iste voluptas
-                                                                modi animi eius
-                                                                voluptatum
-                                                                adipisci amet
-                                                                officiis.{" "}
-                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         )}

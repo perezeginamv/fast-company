@@ -125,8 +125,14 @@ const EditUserPage = () => {
         return Object.keys(errors).length === 0;
     };
     const isValid = Object.keys(errors).length === 0;
+    const handleClick = () => {
+        history.push(history.push(`/users/${data._id}`));
+    };
     return (
         <div className="container mt-5">
+            <button className="btn btn-primary" onClick={handleClick}>
+                <i className="bi bi-caret-left"></i>Назад
+            </button>
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
                     {!isLoading && Object.keys(professions).length > 0 ? (
