@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import api from "../../../api";
 import Qualities from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
+import { getDate } from "../../../utils/dateDisplay";
 
 const UserPage = ({ userId }) => {
     const history = useHistory();
@@ -26,32 +27,15 @@ const UserPage = ({ userId }) => {
         return usersId.name;
     };
 
-    const getDate = (date) => {
-        const currentDate = new Date(Date.now());
-        const dd = new Date(Number(date));
-        const timeInterval = Math.floor(
-            (currentDate - dd) / (1000 * 60 * 60 * 24)
-        );
-        // const year = timeInterval.getFullYear().toString();
-
-        // const creatCommentDate = new Date(Number(date));
-        // const year = creatCommentDate.getFullYear().toString();
-        // const month = creatCommentDate.toLocaleString("en-us", {
-        //     month: "long"
-        // });
-        // const day = creatCommentDate.getDay().toString();
-
-        console.log(timeInterval);
-
-        // const convertedDate = ` - ${day} ${month}`;
-        // return convertedDate;
-    };
-
     const deletingСomment = (id) => {
         api.comments.remove(id);
         api.comments
             .fetchCommentsForUser(userId)
             .then((comments) => setComments(comments));
+    };
+
+    const userSelection = ({ target }) => {
+        console.log(target.value);
     };
 
     if (user && users) {
@@ -165,6 +149,7 @@ const UserPage = ({ userId }) => {
                                     <h2>New comment</h2>
                                     <div className="mb-4">
                                         <select
+                                            onChange={userSelection}
                                             className="form-select"
                                             name="userId"
                                             value=""
@@ -172,9 +157,13 @@ const UserPage = ({ userId }) => {
                                             <option disabled value="" selected>
                                                 Выберите пользователя
                                             </option>
-
-                                            <option>Доктор</option>
-                                            <option>Тусер</option>
+                                            {users.map((user) => (
+                                                <option key={user._id}>
+                                                    {user.name}
+                                                </option>
+                                            ))}
+                                            {/* <option>Доктор</option>
+                                            <option>Тусер</option> */}
                                         </select>
                                     </div>
                                     <div className="mb-4">
