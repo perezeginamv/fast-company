@@ -34,8 +34,9 @@ const UserPage = ({ userId }) => {
             .then((comments) => setComments(comments));
     };
 
-    const userSelection = ({ target }) => {
-        console.log(target.value);
+    const hanleSubmit = (e) => {
+        e.preventDefault();
+        console.log(e.target);
     };
 
     if (user && users) {
@@ -145,16 +146,16 @@ const UserPage = ({ userId }) => {
                     <div className="col-md-8">
                         <div className="card mb-2">
                             <div className="card-body">
-                                <div>
+                                <form onSubmit={hanleSubmit}>
                                     <h2>New comment</h2>
                                     <div className="mb-4">
                                         <select
-                                            onChange={userSelection}
                                             className="form-select"
-                                            name="userId"
-                                            value=""
+                                            name={users._id}
+                                            value={users.name}
+                                            defaultValue=""
                                         >
-                                            <option disabled value="" selected>
+                                            <option value="">
                                                 Выберите пользователя
                                             </option>
                                             {users.map((user) => (
@@ -162,8 +163,6 @@ const UserPage = ({ userId }) => {
                                                     {user.name}
                                                 </option>
                                             ))}
-                                            {/* <option>Доктор</option>
-                                            <option>Тусер</option> */}
                                         </select>
                                     </div>
                                     <div className="mb-4">
@@ -179,7 +178,15 @@ const UserPage = ({ userId }) => {
                                             rows="3"
                                         ></textarea>
                                     </div>
-                                </div>
+                                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button
+                                            className="btn btn-primary"
+                                            type="submit"
+                                        >
+                                            Опубликовать
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         {comments.length > 0 && (
