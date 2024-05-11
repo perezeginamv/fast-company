@@ -9,6 +9,11 @@ const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
     const [comments, setComments] = useState();
+    // const [comment, setComment] = useState({
+    //     pageId: "",
+    //     userId: "",
+    //     content: ""
+    // });
     const [users, setUsers] = useState();
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
@@ -37,6 +42,10 @@ const UserPage = ({ userId }) => {
     const hanleSubmit = (e) => {
         e.preventDefault();
         console.log(e.target);
+    };
+
+    const handleChange = (target) => {
+        console.log(target);
     };
 
     if (user && users) {
@@ -153,6 +162,7 @@ const UserPage = ({ userId }) => {
                                             className="form-select"
                                             name={users._id}
                                             value={users.name}
+                                            onChange={handleChange}
                                             defaultValue=""
                                         >
                                             <option value="">
