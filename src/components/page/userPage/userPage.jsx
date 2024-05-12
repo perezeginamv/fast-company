@@ -9,11 +9,7 @@ const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
     const [comments, setComments] = useState();
-    // const [comment, setComment] = useState({
-    //     pageId: "",
-    //     userId: "",
-    //     content: ""
-    // });
+    const [comment, setComment] = useState();
     const [users, setUsers] = useState();
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
@@ -39,13 +35,19 @@ const UserPage = ({ userId }) => {
             .then((comments) => setComments(comments));
     };
 
-    const hanleSubmit = (e) => {
-        e.preventDefault();
-        console.log(e.target);
+    const handleChange = ({ target }) => {
+        setComment((prevState) => ({
+            ...prevState,
+            [target.name]: target.value,
+            pageId: user._id
+        }));
+        // console.log(target);
     };
 
-    const handleChange = (target) => {
-        console.log(target);
+    const hanleSubmit = (e) => {
+        e.preventDefault();
+        // api.comments.add(comment).then((comments) => setComments(comments));
+        console.log(comment);
     };
 
     if (user && users) {
@@ -160,8 +162,7 @@ const UserPage = ({ userId }) => {
                                     <div className="mb-4">
                                         <select
                                             className="form-select"
-                                            name={users._id}
-                                            value={users.name}
+                                            name={user._id}
                                             onChange={handleChange}
                                             defaultValue=""
                                         >
@@ -183,6 +184,8 @@ const UserPage = ({ userId }) => {
                                             Сообщение
                                         </label>
                                         <textarea
+                                            name="content"
+                                            onChange={handleChange}
                                             className="form-control"
                                             id="exampleFormControlTextarea1"
                                             rows="3"
