@@ -9,7 +9,11 @@ const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
     const [comments, setComments] = useState();
-    const [comment, setComment] = useState();
+    const [comment, setComment] = useState({
+        userId: "",
+        pageId: "",
+        content: ""
+    });
     const [users, setUsers] = useState();
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
@@ -27,6 +31,10 @@ const UserPage = ({ userId }) => {
         const usersId = users.find((user) => user._id === id);
         return usersId.name;
     };
+    // const getId = (name) => {
+    //     const usersId = users.find((user) => user.name === name);
+    //     return usersId.name;
+    // };
 
     const deletingСomment = (id) => {
         api.comments.remove(id);
@@ -41,13 +49,17 @@ const UserPage = ({ userId }) => {
             [target.name]: target.value,
             pageId: user._id
         }));
-        // console.log(target);
+        console.log(comment);
     };
 
     const hanleSubmit = (e) => {
         e.preventDefault();
-        // api.comments.add(comment).then((comments) => setComments(comments));
-        console.log(comment);
+        api.comments.add(comment).then((comments) => {
+            setComments(comments);
+        });
+        api.comments
+            .fetchCommentsForUser(userId)
+            .then((comments) => setComments(comments));
     };
 
     if (user && users) {
@@ -162,7 +174,7 @@ const UserPage = ({ userId }) => {
                                     <div className="mb-4">
                                         <select
                                             className="form-select"
-                                            name={user._id}
+                                            name="userId"
                                             onChange={handleChange}
                                             defaultValue=""
                                         >
@@ -170,7 +182,10 @@ const UserPage = ({ userId }) => {
                                                 Выберите пользователя
                                             </option>
                                             {users.map((user) => (
-                                                <option key={user._id}>
+                                                <option
+                                                    key={user._id}
+                                                    value={user._id}
+                                                >
                                                     {user.name}
                                                 </option>
                                             ))}
