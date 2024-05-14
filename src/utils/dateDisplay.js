@@ -13,7 +13,7 @@ export function getDate(date) {
     } else if (timeIntervalMs > 1800000 && timeIntervalMs <= 86400000) {
         const hours = commentDate.getHours().toString();
         const minutes = commentDate.getMinutes().toString();
-        return ` ${hours} ${minutes}`;
+        return ` ${hours}:${minutes}`;
     } else if (timeIntervalMs > 86400000 && timeIntervalMs <= 2419200000) {
         const day = commentDate.getDay().toString();
         const month = commentDate.toLocaleString("en-us", {

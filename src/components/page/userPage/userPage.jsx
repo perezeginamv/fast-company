@@ -9,19 +9,20 @@ const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
     const [comments, setComments] = useState();
-    const [comment, setComment] = useState({
-        userId: "",
-        pageId: "",
-        content: ""
-    });
+    const [comment, setComment] = useState();
     const [users, setUsers] = useState();
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
         api.users.getById(userId).then((data) => setUser(data));
-        api.comments
-            .fetchCommentsForUser(userId)
-            .then((comments) => setComments(comments));
-    }, []);
+        api.comments.fetchCommentsForUser(userId).then(
+            (comments) => setComments(comments)
+            // {
+            //     Object.keys(comments).map((comment) =>
+            //         console.log(comments[comment].created_at)
+            //     );
+            // }
+        );
+    }, [comments]);
 
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
@@ -31,16 +32,8 @@ const UserPage = ({ userId }) => {
         const usersId = users.find((user) => user._id === id);
         return usersId.name;
     };
-    // const getId = (name) => {
-    //     const usersId = users.find((user) => user.name === name);
-    //     return usersId.name;
-    // };
-
     const deletingСomment = (id) => {
         api.comments.remove(id);
-        api.comments
-            .fetchCommentsForUser(userId)
-            .then((comments) => setComments(comments));
     };
 
     const handleChange = ({ target }) => {
@@ -49,7 +42,6 @@ const UserPage = ({ userId }) => {
             [target.name]: target.value,
             pageId: user._id
         }));
-        console.log(comment);
     };
 
     const hanleSubmit = (e) => {
@@ -57,9 +49,7 @@ const UserPage = ({ userId }) => {
         api.comments.add(comment).then((comments) => {
             setComments(comments);
         });
-        api.comments
-            .fetchCommentsForUser(userId)
-            .then((comments) => setComments(comments));
+        e.target.reset();
     };
 
     if (user && users) {
