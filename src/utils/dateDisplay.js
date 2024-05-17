@@ -13,15 +13,21 @@ export function getDate(date) {
     } else if (timeIntervalMs > 1800000 && timeIntervalMs <= 86400000) {
         const hours = commentDate.getHours().toString();
         const minutes = commentDate.getMinutes().toString();
-        return ` ${hours}:${minutes}`;
+        const zeroLength = 2;
+        console.log(hours.padStart(zeroLength, 0));
+        return ` ${hours.padStart(zeroLength, 0)}:${minutes.padStart(
+            zeroLength,
+            0
+        )}`;
     } else if (timeIntervalMs > 86400000 && timeIntervalMs <= 2419200000) {
-        const day = commentDate.getDay().toString();
+        const day = commentDate.getDate().toString();
         const month = commentDate.toLocaleString("en-us", {
             month: "long"
         });
+
         return ` ${day} ${month}`;
     } else {
-        const day = commentDate.getDay().toString();
+        const day = commentDate.getDate().toString();
         const year = commentDate.getFullYear().toString();
         const month = commentDate.toLocaleString("en-us", {
             month: "long"
