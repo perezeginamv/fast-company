@@ -4,7 +4,7 @@ import api from "../../../api";
 import Qualities from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
 import { getDate } from "../../../utils/dateDisplay";
-import { getSortedList } from "../../../utils/sorting";
+// import { getSortedList } from "../../../utils/sorting";
 
 const UserPage = ({ userId }) => {
     const history = useHistory();
@@ -55,7 +55,22 @@ const UserPage = ({ userId }) => {
         e.target.reset();
     };
 
-    getSortedList(comments);
+    const getSortedList = (list) => {
+        const key = "created_at";
+        function compareNumeric(a, b) {
+            if (a[key] > b[key]) return 1;
+            if (a[key] === b[key]) return 0;
+            if (a[key] < b[key]) return -1;
+        }
+        list.sort(compareNumeric);
+    };
+
+    if (comments) {
+        console.log(getSortedList(comments));
+    }
+
+    // const sortedList = getSortedList(comments);
+    // console.log(comments);
 
     if (user && users) {
         return (

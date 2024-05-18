@@ -14,7 +14,6 @@ export function getDate(date) {
         const hours = commentDate.getHours().toString();
         const minutes = commentDate.getMinutes().toString();
         const zeroLength = 2;
-        console.log(hours.padStart(zeroLength, 0));
         return ` ${hours.padStart(zeroLength, 0)}:${minutes.padStart(
             zeroLength,
             0
