@@ -4,7 +4,6 @@ import api from "../../../api";
 import Qualities from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
 import { getDate } from "../../../utils/dateDisplay";
-// import { getSortedList } from "../../../utils/sorting";
 
 const UserPage = ({ userId }) => {
     const history = useHistory();
@@ -18,7 +17,7 @@ const UserPage = ({ userId }) => {
         api.users.getById(userId).then((data) => setUser(data));
         api.comments
             .fetchCommentsForUser(userId)
-            .then((comments) => setComments(comments));
+            .then((comments) => setComments(getSortedList(comments)));
     }, []);
 
     const handleClick = () => {
@@ -33,8 +32,21 @@ const UserPage = ({ userId }) => {
         api.comments.remove(id);
         api.comments
             .fetchCommentsForUser(userId)
-            .then((comments) => setComments(comments));
+            .then((comments) => setComments(getSortedList(comments)));
     };
+
+    // const validatorConfig = {
+    //     userId: {
+    //         isRequired: {
+    //             message: "Пользовательне выбран"
+    //         }
+    //     },
+    //     content: {
+    //         isRequired: {
+    //             message: "Введите сообщение"
+    //         }
+    //     }
+    // };
 
     const handleChange = ({ target }) => {
         setComment((prevState) => ({
@@ -47,30 +59,22 @@ const UserPage = ({ userId }) => {
     const hanleSubmit = (e) => {
         e.preventDefault();
         api.comments.add(comment).then((comments) => {
-            setComments(comments);
+            setComments(getSortedList(comments));
         });
         api.comments
             .fetchCommentsForUser(userId)
-            .then((comments) => setComments(comments));
+            .then((comments) => setComments(getSortedList(comments)));
         e.target.reset();
     };
 
     const getSortedList = (list) => {
         const key = "created_at";
-        function compareNumeric(a, b) {
-            if (a[key] > b[key]) return 1;
-            if (a[key] === b[key]) return 0;
-            if (a[key] < b[key]) return -1;
-        }
-        list.sort(compareNumeric);
+        const sortedlist = list.sort(function (a, b) {
+            const x = Number(a[key]) > Number(b[key]) ? -1 : 1;
+            return x;
+        });
+        return sortedlist;
     };
-
-    if (comments) {
-        console.log(getSortedList(comments));
-    }
-
-    // const sortedList = getSortedList(comments);
-    // console.log(comments);
 
     if (user && users) {
         return (
