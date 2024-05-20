@@ -4,6 +4,7 @@ import api from "../../../api";
 import Qualities from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
 import { getDate } from "../../../utils/dateDisplay";
+import { validator } from "../../../utils/validator";
 
 const UserPage = ({ userId }) => {
     const history = useHistory();
@@ -11,6 +12,7 @@ const UserPage = ({ userId }) => {
     const [comments, setComments] = useState();
     const [comment, setComment] = useState();
     const [users, setUsers] = useState();
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
@@ -35,18 +37,27 @@ const UserPage = ({ userId }) => {
             .then((comments) => setComments(getSortedList(comments)));
     };
 
-    // const validatorConfig = {
-    //     userId: {
-    //         isRequired: {
-    //             message: "Пользовательне выбран"
-    //         }
-    //     },
-    //     content: {
-    //         isRequired: {
-    //             message: "Введите сообщение"
-    //         }
-    //     }
-    // };
+    const validatorConfig = {
+        userId: {
+            isRequired: {
+                message: "Пользователь не выбран"
+            }
+        },
+        content: {
+            isRequired: {
+                message: "Введите сообщение"
+            }
+        }
+    };
+    // useEffect(() => {
+    //     validate();
+    // }, [comment]);
+    const validate = () => {
+        const errors = validator(comment, validatorConfig);
+        setErrors(errors);
+        console.log(errors);
+        return Object.keys(errors).length === 0;
+    };
 
     const handleChange = ({ target }) => {
         setComment((prevState) => ({
@@ -58,6 +69,9 @@ const UserPage = ({ userId }) => {
 
     const hanleSubmit = (e) => {
         e.preventDefault();
+        const isValid = validate();
+        console.log(isValid);
+        if (!isValid) return;
         api.comments.add(comment).then((comments) => {
             setComments(getSortedList(comments));
         });
@@ -73,6 +87,7 @@ const UserPage = ({ userId }) => {
             const x = Number(a[key]) > Number(b[key]) ? -1 : 1;
             return x;
         });
+        console.log(sortedlist);
         return sortedlist;
     };
 
@@ -204,6 +219,11 @@ const UserPage = ({ userId }) => {
                                                 </option>
                                             ))}
                                         </select>
+                                        {errors && (
+                                            <div className="invalid-feedback">
+                                                {errors.userId}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="mb-4">
                                         <label
