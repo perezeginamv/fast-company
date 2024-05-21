@@ -14,6 +14,21 @@ const UserPage = ({ userId }) => {
     const [users, setUsers] = useState();
     const [errors, setErrors] = useState({});
 
+    const hanleSubmit = (e) => {
+        e.preventDefault();
+        const isValid = validate();
+        if (!isValid) return;
+        api.comments.add(comment).then((comments) => {
+            setComments(getSortedList(comments));
+        });
+
+        setComment({ pageId: "", userId: "", content: "" });
+        e.target.reset();
+        api.comments
+            .fetchCommentsForUser(userId)
+            .then((comments) => setComments(getSortedList(comments)));
+    };
+
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
         api.users.getById(userId).then((data) => setUser(data));
@@ -37,6 +52,18 @@ const UserPage = ({ userId }) => {
             .then((comments) => setComments(getSortedList(comments)));
     };
 
+    const handleChange = ({ target }) => {
+        setComment((prevState) => ({
+            ...prevState,
+            [target.name]: target.value,
+            pageId: user._id
+        }));
+    };
+
+    useEffect(() => {
+        validate();
+    }, [comment]);
+
     const validatorConfig = {
         userId: {
             isRequired: {
@@ -49,36 +76,12 @@ const UserPage = ({ userId }) => {
             }
         }
     };
-    // useEffect(() => {
-    //     validate();
-    // }, [comment]);
+
     const validate = () => {
         const errors = validator(comment, validatorConfig);
         setErrors(errors);
         console.log(errors);
         return Object.keys(errors).length === 0;
-    };
-
-    const handleChange = ({ target }) => {
-        setComment((prevState) => ({
-            ...prevState,
-            [target.name]: target.value,
-            pageId: user._id
-        }));
-    };
-
-    const hanleSubmit = (e) => {
-        e.preventDefault();
-        const isValid = validate();
-        console.log(isValid);
-        if (!isValid) return;
-        api.comments.add(comment).then((comments) => {
-            setComments(getSortedList(comments));
-        });
-        api.comments
-            .fetchCommentsForUser(userId)
-            .then((comments) => setComments(getSortedList(comments)));
-        e.target.reset();
     };
 
     const getSortedList = (list) => {
@@ -87,7 +90,7 @@ const UserPage = ({ userId }) => {
             const x = Number(a[key]) > Number(b[key]) ? -1 : 1;
             return x;
         });
-        console.log(sortedlist);
+
         return sortedlist;
     };
 
@@ -201,6 +204,10 @@ const UserPage = ({ userId }) => {
                                 <form onSubmit={hanleSubmit}>
                                     <h2>New comment</h2>
                                     <div className="mb-4">
+                                        <div className="invalid-feedback">
+                                            {errors.userId}
+                                        </div>
+
                                         <select
                                             className="form-select"
                                             name="userId"
@@ -219,11 +226,6 @@ const UserPage = ({ userId }) => {
                                                 </option>
                                             ))}
                                         </select>
-                                        {errors && (
-                                            <div className="invalid-feedback">
-                                                {errors.userId}
-                                            </div>
-                                        )}
                                     </div>
                                     <div className="mb-4">
                                         <label
