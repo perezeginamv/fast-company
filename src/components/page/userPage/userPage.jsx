@@ -93,6 +93,7 @@ const UserPage = ({ userId }) => {
 
         return sortedlist;
     };
+    console.log(errors);
 
     if (user && users) {
         return (
