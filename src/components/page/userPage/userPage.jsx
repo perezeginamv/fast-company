@@ -14,21 +14,6 @@ const UserPage = ({ userId }) => {
     const [users, setUsers] = useState();
     const [errors, setErrors] = useState({});
 
-    const hanleSubmit = (e) => {
-        e.preventDefault();
-        const isValid = validate();
-        if (!isValid) return;
-        api.comments.add(comment).then((comments) => {
-            setComments(getSortedList(comments));
-        });
-
-        setComment({ pageId: "", userId: "", content: "" });
-        e.target.reset();
-        api.comments
-            .fetchCommentsForUser(userId)
-            .then((comments) => setComments(getSortedList(comments)));
-    };
-
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
         api.users.getById(userId).then((data) => setUser(data));
@@ -62,7 +47,8 @@ const UserPage = ({ userId }) => {
 
     useEffect(() => {
         validate();
-    }, [comment]);
+        console.log(errors);
+    }, []);
 
     const validatorConfig = {
         userId: {
@@ -79,10 +65,11 @@ const UserPage = ({ userId }) => {
 
     const validate = () => {
         const errors = validator(comment, validatorConfig);
-        setErrors(errors);
         console.log(errors);
+        setErrors(errors);
         return Object.keys(errors).length === 0;
     };
+    const isValid = Object.keys(errors).length === 0;
 
     const getSortedList = (list) => {
         const key = "created_at";
@@ -93,7 +80,24 @@ const UserPage = ({ userId }) => {
 
         return sortedlist;
     };
-    console.log(errors);
+
+    const hanleSubmit = (e) => {
+        e.preventDefault();
+
+        const isValid = validate();
+
+        if (!isValid) return;
+
+        api.comments.add(comment).then((comments) => {
+            setComments(getSortedList(comments));
+        });
+
+        setComment({ pageId: "", userId: "", content: "" });
+        e.target.reset();
+        api.comments
+            .fetchCommentsForUser(userId)
+            .then((comments) => setComments(getSortedList(comments)));
+    };
 
     if (user && users) {
         return (
@@ -201,14 +205,10 @@ const UserPage = ({ userId }) => {
 
                     <div className="col-md-8">
                         <div className="card mb-2">
-                            <div className="card-body">
+                            <div className="card-body ">
                                 <form onSubmit={hanleSubmit}>
                                     <h2>New comment</h2>
                                     <div className="mb-4">
-                                        <div className="invalid-feedback">
-                                            {errors.userId}
-                                        </div>
-
                                         <select
                                             className="form-select"
                                             name="userId"
@@ -227,7 +227,13 @@ const UserPage = ({ userId }) => {
                                                 </option>
                                             ))}
                                         </select>
+                                        {errors.userId && (
+                                            <p className="text-danger">
+                                                {errors.userId}
+                                            </p>
+                                        )}
                                     </div>
+
                                     <div className="mb-4">
                                         <label
                                             htmlFor="exampleFormControlTextarea1"
@@ -242,11 +248,17 @@ const UserPage = ({ userId }) => {
                                             id="exampleFormControlTextarea1"
                                             rows="3"
                                         ></textarea>
+                                        {errors.content && (
+                                            <p className="text-danger">
+                                                {errors.content}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                                         <button
                                             className="btn btn-primary"
                                             type="submit"
+                                            disabled={isValid}
                                         >
                                             Опубликовать
                                         </button>
