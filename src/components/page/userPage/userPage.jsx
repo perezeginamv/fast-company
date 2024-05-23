@@ -12,7 +12,7 @@ const UserPage = ({ userId }) => {
     const [comments, setComments] = useState();
     const [comment, setComment] = useState();
     const [users, setUsers] = useState();
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState();
 
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
@@ -25,6 +25,7 @@ const UserPage = ({ userId }) => {
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
     };
+    console.log(comment);
 
     const getName = (id) => {
         const usersId = users.find((user) => user._id === id);
@@ -48,6 +49,7 @@ const UserPage = ({ userId }) => {
     useEffect(() => {
         validate();
         console.log(errors);
+        console.log(comment);
     }, []);
 
     const validatorConfig = {
@@ -69,7 +71,7 @@ const UserPage = ({ userId }) => {
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
-    const isValid = Object.keys(errors).length === 0;
+    // const isValid = Object.keys(errors).length === 0;
 
     const getSortedList = (list) => {
         const key = "created_at";
@@ -77,22 +79,17 @@ const UserPage = ({ userId }) => {
             const x = Number(a[key]) > Number(b[key]) ? -1 : 1;
             return x;
         });
-
         return sortedlist;
     };
 
     const hanleSubmit = (e) => {
         e.preventDefault();
-
         const isValid = validate();
-
         if (!isValid) return;
-
         api.comments.add(comment).then((comments) => {
             setComments(getSortedList(comments));
         });
-
-        setComment({ pageId: "", userId: "", content: "" });
+        setComment({});
         e.target.reset();
         api.comments
             .fetchCommentsForUser(userId)
@@ -258,7 +255,7 @@ const UserPage = ({ userId }) => {
                                         <button
                                             className="btn btn-primary"
                                             type="submit"
-                                            disabled={isValid}
+                                            // disabled={isValid}
                                         >
                                             Опубликовать
                                         </button>
