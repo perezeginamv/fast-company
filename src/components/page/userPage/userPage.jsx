@@ -26,6 +26,7 @@ const UserPage = ({ userId }) => {
         history.push(history.location.pathname + "/edit");
     };
     console.log(comment);
+    console.log(comments);
 
     const getName = (id) => {
         const usersId = users.find((user) => user._id === id);
