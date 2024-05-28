@@ -113,6 +113,7 @@ const EditUserPage = () => {
     useEffect(() => {
         validate();
     }, [data]);
+
     const handleChange = (target) => {
         setData((prevState) => ({
             ...prevState,

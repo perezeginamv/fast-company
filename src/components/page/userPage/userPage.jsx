@@ -10,9 +10,13 @@ const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
     const [comments, setComments] = useState();
-    const [comment, setComment] = useState();
+    const [comment, setComment] = useState({
+        userId: "",
+        pageId: "",
+        content: ""
+    });
     const [users, setUsers] = useState();
-    const [errors, setErrors] = useState();
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
@@ -25,8 +29,6 @@ const UserPage = ({ userId }) => {
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
     };
-    console.log(comment);
-    console.log(comments);
 
     const getName = (id) => {
         const usersId = users.find((user) => user._id === id);
@@ -47,12 +49,6 @@ const UserPage = ({ userId }) => {
         }));
     };
 
-    useEffect(() => {
-        validate();
-        console.log(errors);
-        console.log(comment);
-    }, []);
-
     const validatorConfig = {
         userId: {
             isRequired: {
@@ -65,6 +61,9 @@ const UserPage = ({ userId }) => {
             }
         }
     };
+    useEffect(() => {
+        validate();
+    }, []);
 
     const validate = () => {
         const errors = validator(comment, validatorConfig);
@@ -90,7 +89,7 @@ const UserPage = ({ userId }) => {
         api.comments.add(comment).then((comments) => {
             setComments(getSortedList(comments));
         });
-        setComment({});
+        setComment({ userId: "", pageId: "", content: "" });
         e.target.reset();
         api.comments
             .fetchCommentsForUser(userId)
@@ -256,7 +255,6 @@ const UserPage = ({ userId }) => {
                                         <button
                                             className="btn btn-primary"
                                             type="submit"
-                                            // disabled={isValid}
                                         >
                                             Опубликовать
                                         </button>
