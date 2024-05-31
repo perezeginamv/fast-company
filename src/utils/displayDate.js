@@ -4,5 +4,6 @@ export function displayDate(data) {
     const yearDif = dateNow.getFullYear() - date.getFullYear();
     if (yearDif===0) {
         const da
+        console.log(data);
     }
 }
