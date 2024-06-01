@@ -3,7 +3,7 @@ export function displayDate(data) {
     const dateNow = new Date();
     const yearDif = dateNow.getFullYear() - date.getFullYear();
     if (yearDif===0) {
-        const da
+        const data
         console.log(data);
     }
 }
