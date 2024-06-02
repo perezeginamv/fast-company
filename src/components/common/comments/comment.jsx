@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import API from "../../../api";
+import { displayDate } from "../../../utils/displayDate";
 
 const Comment = ({
     content,
@@ -68,7 +69,9 @@ const Comment = ({
 Comment.propTypes = {
     content: PropTypes.string,
     userId: PropTypes.string,
-    onRemove: PropTypes.func
+    onRemove: PropTypes.func,
+    created_at: PropTypes.string,
+    _id: PropTypes.string
 };
 
 export default Comment;
