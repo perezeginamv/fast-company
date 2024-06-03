@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { validator } from "../../../utils/validator";
 import api from "../../../api";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
+import BackHistoryButton from "../../common/backButton";
 
 const EditUserPage = () => {
     const { userId } = useParams();
-    const history = useHistory();
     const [isLoading, setIsLoading] = useState(false);
 
     const [data, setData] = useState({
@@ -126,14 +126,11 @@ const EditUserPage = () => {
         return Object.keys(errors).length === 0;
     };
     const isValid = Object.keys(errors).length === 0;
-    const handleClick = () => {
-        history.push(history.push(`/users/${data._id}`));
-    };
+
     return (
         <div className="container mt-5">
-            <button className="btn btn-primary" onClick={handleClick}>
-                <i className="bi bi-caret-left"></i>Назад
-            </button>
+            <BackHistoryButton />
+
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
                     {!isLoading && Object.keys(professions).length > 0 ? (

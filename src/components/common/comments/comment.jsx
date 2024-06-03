@@ -17,8 +17,8 @@ const Comment = ({
         API.users.getById(userId).then((data) => {
             setUser(data);
             setIsLoading(false);
-        }, []);
-    });
+        });
+    }, []);
 
     return (
         <div className="bg-light card-body mb-3">
@@ -70,7 +70,7 @@ Comment.propTypes = {
     content: PropTypes.string,
     userId: PropTypes.string,
     onRemove: PropTypes.func,
-    created_at: PropTypes.string,
+    created_at: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     _id: PropTypes.string
 };
 
