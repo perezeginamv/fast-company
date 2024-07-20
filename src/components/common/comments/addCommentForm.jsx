@@ -13,7 +13,7 @@ const AddCommentForm = ({ onSubmit }) => {
     const handleChange = (target) => {
         setData((prevState) => ({ ...prevState, [target.name]: target.value }));
     };
-   
+    console.log(data);
     const validatorConfig = {
         userId: {
             isRequired: {
