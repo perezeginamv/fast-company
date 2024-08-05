@@ -19,6 +19,7 @@ const GroupList = ({
                             (items[item] === selectedItem ? " active" : "")
                         }
                         onClick={() => onItemSelect(items[item])}
+                        role="button"
                     >
                         {items[item][contentProperty]}
                     </li>
@@ -36,12 +37,18 @@ const GroupList = ({
                         (item === selectedItem ? " active" : "")
                     }
                     onClick={() => onItemSelect(item)}
+                    role="button"
                 >
                     {item[contentProperty]}
                 </li>
             ))}
         </ul>
     );
+};
+
+GroupList.defaultProps = {
+    valueProperty: "_id",
+    contentProperty: "name"
 };
 
 GroupList.propTypes = {
