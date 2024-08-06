@@ -36,7 +36,6 @@ const UsersListPage = () => {
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data));
     }, []);
-    console.log(professions);
 
     useEffect(() => {
         setCurrentPage(1);
