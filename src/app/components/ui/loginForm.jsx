@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxFieald from "../common/form/checkBoxField";
+import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
 // import * as yup from "yup"; // библиотека YUP
 
 const LoginForm = () => {
+    const history = useHistory();
     const [data, setDate] = useState({
         email: "",
         password: "",
@@ -17,6 +20,7 @@ const LoginForm = () => {
             [target.name]: target.value
         }));
     };
+    const { loginIn } = useAuth();
     // Пример валидации на библиотеке YUP
     // const validateSchema = yup.object().shape({
     //     password: yup
@@ -84,12 +88,18 @@ const LoginForm = () => {
     };
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-
         console.log(data);
+        try {
+            await loginIn(data);
+            history.push("/");
+        } catch (error) {
+            setErrors(error);
+        }
+        loginIn(data);
     };
     return (
         <form onSubmit={handleSubmit}>
