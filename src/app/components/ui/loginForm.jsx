@@ -14,13 +14,15 @@ const LoginForm = () => {
         stayOn: false
     });
     const [errors, setErrors] = useState({});
+    const [enterError, setEnterError] = useState(null);
     const handleChange = (target) => {
         setDate((prevState) => ({
             ...prevState,
             [target.name]: target.value
         }));
+        setEnterError(null);
     };
-    const { loginIn } = useAuth();
+    const { logIn } = useAuth();
     // Пример валидации на библиотеке YUP
     // const validateSchema = yup.object().shape({
     //     password: yup
@@ -52,24 +54,11 @@ const LoginForm = () => {
         email: {
             isRequired: {
                 message: "Электронная почта обязательна для заполнения"
-            },
-            isEmail: {
-                message: "Email введен некорректно"
             }
         },
         password: {
             isRequired: {
                 message: "Пароль обязателен для заполнения"
-            },
-            isCapitalSymbol: {
-                message: "Пароль должен содержать хотя бы одну заглавную букву"
-            },
-            isContainDigit: {
-                message: "Пароль должень содержать хотя бы одну цыфру"
-            },
-            min: {
-                message: "Пароль должень состоять минимум из 8 символов",
-                value: 8
             }
         }
     };
@@ -94,10 +83,10 @@ const LoginForm = () => {
         if (!isValid) return;
 
         try {
-            await loginIn(data);
+            await logIn(data);
             history.push("/");
         } catch (error) {
-            setErrors(error);
+            setEnterError(error.message);
         }
     };
     return (
@@ -124,8 +113,9 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxFieald>
+            {enterError && <p className="text-danger">{enterError}</p>}
             <button
-                disabled={!isValid}
+                disabled={!isValid || enterError}
                 className="btn btn-primary w-100 mx-auto"
             >
                 Submit

@@ -5,7 +5,12 @@ import userService from "../services/user.service";
 import { toast } from "react-toastify";
 import { setTokens } from "../services/localStorage.service";
 
-const httpAuth = axios.create();
+const httpAuth = axios.create({
+    baseURL: `https://identitytoolkit.googleapis.com/v1/`,
+    params: {
+        key: process.env.REACT_APP_FIREBASE_KEY
+    }
+});
 const AuthContext = React.createContext();
 
 export const useAuth = () => {
@@ -16,9 +21,8 @@ const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState({});
     const [error, setError] = useState(null);
     async function signUp({ email, password, ...rest }) {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
         try {
-            const { data } = await httpAuth.post(url, {
+            const { data } = await httpAuth.post(`accounts:signUp`, {
                 email,
                 password,
                 returnSecureToken: true
@@ -38,14 +42,16 @@ const AuthProvider = ({ children }) => {
             }
         }
     }
-    async function loginIn({ email, password }) {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+    async function logIn({ email, password }) {
         try {
-            const { data } = await httpAuth.post(url, {
-                email,
-                password,
-                returnSecureToken: true
-            });
+            const { data } = await httpAuth.post(
+                `accounts:signInWithPassword`,
+                {
+                    email,
+                    password,
+                    returnSecureToken: true
+                }
+            );
             console.log(data);
 
             setTokens(data);
@@ -54,10 +60,7 @@ const AuthProvider = ({ children }) => {
             const { code, message } = error.response.data.error;
             if (code === 400) {
                 if (message === "INVALID_LOGIN_CREDENTIALS") {
-                    const errorObject = {
-                        email: "Такой пользователь не найден, повторите вход"
-                    };
-                    throw errorObject;
+                    throw new Error("Email или пароль введены некорректно");
                 }
             }
         }
@@ -84,7 +87,7 @@ const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ signUp, currentUser, loginIn }}>
+        <AuthContext.Provider value={{ signUp, currentUser, logIn }}>
             {children}
         </AuthContext.Provider>
     );
