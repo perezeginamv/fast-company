@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
             }
         }
     }
-    async function loginIn({ email, password, ...rest }) {
+    async function loginIn({ email, password }) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`;
         try {
             const { data } = await httpAuth.post(url, {
@@ -46,14 +46,16 @@ const AuthProvider = ({ children }) => {
                 password,
                 returnSecureToken: true
             });
+            console.log(data);
+
             setTokens(data);
         } catch (error) {
             errorCatcher(error);
             const { code, message } = error.response.data.error;
             if (code === 400) {
-                if (message === "EMAIL_EXISTS") {
+                if (message === "INVALID_LOGIN_CREDENTIALS") {
                     const errorObject = {
-                        email: "Пользователь с таким Email уже существует"
+                        email: "Такой пользователь не найден, повторите вход"
                     };
                     throw errorObject;
                 }

@@ -92,14 +92,13 @@ const LoginForm = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+
         try {
             await loginIn(data);
             history.push("/");
         } catch (error) {
             setErrors(error);
         }
-        loginIn(data);
     };
     return (
         <form onSubmit={handleSubmit}>
