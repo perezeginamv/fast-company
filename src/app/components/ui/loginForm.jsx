@@ -85,7 +85,6 @@ const LoginForm = () => {
         try {
             await logIn(data);
             history.push("/");
-            console.log(data);
         } catch (error) {
             setEnterError(error.message);
         }
