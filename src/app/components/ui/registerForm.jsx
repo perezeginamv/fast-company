@@ -23,6 +23,8 @@ const RegisterForm = () => {
     });
     const { signUp } = useAuth();
     const { qualities } = useQualities();
+    console.log(qualities);
+
     const qualitiesList = qualities.map((q) => ({
         label: q.name,
         value: q._id
