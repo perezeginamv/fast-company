@@ -33,6 +33,7 @@ const RegisterForm = () => {
         label: p.name,
         value: p._id
     }));
+
     const [errors, setErrors] = useState({});
 
     const handleChange = (target) => {
