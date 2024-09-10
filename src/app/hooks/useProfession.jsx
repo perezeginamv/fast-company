@@ -37,7 +37,6 @@ export const ProfessionProvider = ({ children }) => {
             const { content } = await professionService.get();
             setProfessions(content);
             console.log(content);
-
             setLoading(false);
         } catch (error) {
             errorCatcher(error);
