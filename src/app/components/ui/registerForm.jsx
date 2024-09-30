@@ -21,8 +21,6 @@ const RegisterForm = () => {
         licence: false
     });
 
-    console.log(data);
-
     const { signUp } = useAuth();
     const { qualities } = useQualities();
     const qualitiesList = qualities.map((q) => ({
