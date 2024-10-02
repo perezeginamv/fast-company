@@ -20,7 +20,6 @@ const RegisterForm = () => {
         qualities: [],
         licence: false
     });
-    console.log(data);
 
     const { signUp } = useAuth();
     const { qualities } = useQualities();
