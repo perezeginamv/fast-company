@@ -34,7 +34,7 @@ const RegisterForm = () => {
         value: p._id
     }));
     const [errors, setErrors] = useState({});
-    console.log(errors);
+
     const handleChange = (target) => {
         setData((prevState) => ({
             ...prevState,
