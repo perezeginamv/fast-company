@@ -28,7 +28,7 @@ const RegisterForm = () => {
         value: q._id
     }));
     const { professions } = useProfessions();
-   
+    console.log(professions);
 
     const professionsList = professions.map((p) => ({
         label: p.name,
