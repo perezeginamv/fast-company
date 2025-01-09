@@ -9,7 +9,6 @@ import { AddCommentForm, CommentList } from "../common/comments";
 const Comments = () => {
     const { userId } = useParams();
     const [comments, setComments] = useState([]);
-    console.log(userId);
 
     useEffect(() => {
         api.comments
