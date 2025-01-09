@@ -25,6 +25,7 @@ const UserProvider = ({ children }) => {
     async function getUsers() {
         try {
             const { content } = await userService.get();
+
             setUsers(content);
             setLoading(false);
         } catch (error) {
