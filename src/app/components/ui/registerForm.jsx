@@ -95,7 +95,6 @@ const RegisterForm = () => {
             ...data,
             qualities: data.qualities.map((q) => q.value)
         };
-        console.log(newData);
 
         try {
             await signUp(newData);
