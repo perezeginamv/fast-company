@@ -27,10 +27,15 @@ export function getTokenExpiresDate() {
     return localStorage.getItem(EXPIRES_KEY);
 }
 
+export function getUserId() {
+    return localStorage.getItem(USERID_KEY);
+}
+
 const localStorageService = {
     setTokens,
     getAccesToken,
     getRefreshToken,
-    getTokenExpiresDate
+    getTokenExpiresDate,
+    getUserId
 };
 export default localStorageService;
