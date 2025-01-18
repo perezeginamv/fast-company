@@ -3,13 +3,14 @@ import { useParams } from "react-router";
 import api from "../../api";
 import { orderBy } from "lodash";
 import { AddCommentForm, CommentList } from "../common/comments";
+import { useComments } from "../../hooks/useComments";
 // import CommentList from "../common/comments/commentList";
 // import AddCommentForm from "../common/comments/addCommentForm";
 
 const Comments = () => {
     const { userId } = useParams();
     const [comments, setComments] = useState([]);
-    console.log(userId);
+    const { createComment } = useComments();
 
     useEffect(() => {
         api.comments
@@ -17,9 +18,10 @@ const Comments = () => {
             .then((data) => setComments(data));
     }, []);
     const handleSubmit = (data) => {
-        api.comments
-            .add({ ...data, pageId: userId })
-            .then((data) => setComments([...comments, data]));
+        createComment(data);
+        // api.comments
+        //     .add({ ...data, pageId: userId })
+        //     .then((data) => setComments([...comments, data]));
     };
 
     const handleRemoveComment = (id) => {

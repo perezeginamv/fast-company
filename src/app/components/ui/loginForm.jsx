@@ -15,6 +15,7 @@ const LoginForm = () => {
     });
     const [errors, setErrors] = useState({});
     const [enterError, setEnterError] = useState(null);
+
     const handleChange = (target) => {
         setDate((prevState) => ({
             ...prevState,
@@ -84,7 +85,11 @@ const LoginForm = () => {
 
         try {
             await logIn(data);
-            history.push("/");
+            history.push(
+                history.location.state.from.pathname
+                    ? history.location.state.from.pathname
+                    : "/"
+            );
         } catch (error) {
             setEnterError(error.message);
         }
