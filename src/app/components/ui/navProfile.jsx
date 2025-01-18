@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { Link } from "react-router-dom/cjs/react-router-dom";
+import { Link } from "react-router-dom";
 
 const NavProfile = () => {
     const { currentUser } = useAuth();
