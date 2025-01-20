@@ -12,14 +12,9 @@ const UserCard = ({ user }) => {
     return (
         <div className="card mb-3">
             <div className="card-body">
-                {currentUser === user._id && (
+                {currentUser._id === user._id && (
                     <button
-                        className="
-                position-absolute
-                top-0
-                end-0
-                btn btn-light btn-sm
-            "
+                        className="position-absolute top-0 end-0 btn btn-light btn-sm"
                         onClick={handleClick}
                     >
                         <i className="bi bi-gear"></i>
