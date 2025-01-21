@@ -13,7 +13,7 @@ import { useAuth } from "../../../hooks/useAuth";
 
 const EditUserPage = () => {
     const { userId } = useParams();
-    const { currentUser } = useAuth();
+    const { currentUser, updateUserData } = useAuth();
     const { professions } = useProfessions();
     const { qualities } = useQualities();
     const [errors, setErrors] = useState({});
@@ -55,18 +55,22 @@ const EditUserPage = () => {
         const isValid = validate();
         if (!isValid) return;
         const { profession, qualities } = data;
-        api.users
-            .update(userId, {
-                ...data,
-                profession: getProfessionById(professions),
-                qualities: getQualities(qualities)
-            })
-            .then((data) => history.push(`/users/${data._id}`));
-        console.log({
-            ...data,
-            profession: getProfessionById(profession),
-            qualities: getQualities(qualities)
-        });
+        updateUserData(data);
+        console.log(currentUser);
+        history.push(`/users/${data._id}`),
+
+        // api.users
+        //     .update(userId, {
+        //         ...data,
+        //         profession: getProfessionById(professions),
+        //         qualities: getQualities(qualities)
+        //     })
+        //     .then((data) => history.push(`/users/${data._id}`));
+        // console.log({
+        //     ...data,
+        //     profession: getProfessionById(profession),
+        //     qualities: getQualities(qualities)
+        // });
     };
     const transformData = (data) => {
         return data.map((qual) => ({ label: qual.name, value: qual._id }));

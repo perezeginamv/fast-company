@@ -20,6 +20,13 @@ const userService = {
             userEndpoint + localStorageService.getUserId()
         );
         return data;
+    },
+    updateUser: async (newData) => {
+        const { data } = await httpService.put(
+            userEndpoint + localStorageService.getUserId(),
+            newData
+        );
+        return data;
     }
 };
 
