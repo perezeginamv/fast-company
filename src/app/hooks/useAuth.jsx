@@ -95,7 +95,6 @@ const AuthProvider = ({ children }) => {
             errorCatcher(error);
         }
     }
-
     async function getUserData() {
         try {
             const { content } = await userService.getCurrentUser();

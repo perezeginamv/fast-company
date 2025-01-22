@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { validator } from "../../../utils/validator";
-import api from "../../../api";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
@@ -10,9 +9,11 @@ import BackHistoryButton from "../../common/backButton";
 import { useProfessions } from "../../../hooks/useProfession";
 import { useQualities } from "../../../hooks/useQualities";
 import { useAuth } from "../../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
 
 const EditUserPage = () => {
-    const { userId } = useParams();
+    // const { userId } = useParams();
+    const history = useHistory();
     const { currentUser, updateUserData } = useAuth();
     const { professions } = useProfessions();
     const { qualities } = useQualities();
@@ -26,7 +27,6 @@ const EditUserPage = () => {
             }
         }
     };
-
     const getQualities = (elements) => {
         const qualitiesArray = [];
         for (const elem of elements) {
@@ -43,34 +43,27 @@ const EditUserPage = () => {
         return qualitiesArray;
     };
     const [data, setData] = useState({
-        name: currentUser.name,
-        email: currentUser.email,
-        profession: getProfessionById(currentUser.profession),
-        sex: currentUser.sex,
-        qualities: getQualities(currentUser.qualities)
+        ...currentUser,
+        qualities: getQualities(currentUser.qualities),
+        profession: getProfessionById(currentUser.profession)
     });
+    console.log(errors);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        const { profession, qualities } = data;
-        updateUserData(data);
-        console.log(currentUser);
-        history.push(`/users/${data._id}`),
+        const newData = {
+            ...data,
+            qualities: data.qualities.map((q) => q.value)
+        };
 
-        // api.users
-        //     .update(userId, {
-        //         ...data,
-        //         profession: getProfessionById(professions),
-        //         qualities: getQualities(qualities)
-        //     })
-        //     .then((data) => history.push(`/users/${data._id}`));
-        // console.log({
-        //     ...data,
-        //     profession: getProfessionById(profession),
-        //     qualities: getQualities(qualities)
-        // });
+        try {
+            await updateUserData(newData);
+            history.push(`/users/${data._id}`);
+        } catch (error) {
+            setErrors(error);
+        }
     };
     const transformData = (data) => {
         return data.map((qual) => ({ label: qual.name, value: qual._id }));
