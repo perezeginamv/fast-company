@@ -12,67 +12,66 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
 
 const EditUserPage = () => {
-    // const { userId } = useParams();
     const history = useHistory();
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState();
     const { currentUser, updateUserData } = useAuth();
-    const { professions } = useProfessions();
-    const { qualities } = useQualities();
+    const { qualities, isLoading: qualitiesLoading } = useQualities();
+    const qualitiesList = qualities.map((q) => ({
+        label: q.name,
+        value: q._id
+    }));
+    const { professions, isLoading: professionsLoading } = useProfessions();
+    const professionsList = professions.map((p) => ({
+        label: p.name,
+        value: p._id
+    }));
     const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-
-    const getProfessionById = (id) => {
-        for (const prof of professions) {
-            if (prof._id === id) {
-                return { value: prof._id, label: prof.name };
-            }
-        }
-    };
-    const getQualities = (elements) => {
-        const qualitiesArray = [];
-        for (const elem of elements) {
-            for (const quality in qualities) {
-                if (elem === qualities[quality]._id) {
-                    qualitiesArray.push({
-                        value: qualities[quality]._id,
-                        label: qualities[quality].name,
-                        color: qualities[quality].color
-                    });
-                }
-            }
-        }
-        return qualitiesArray;
-    };
-    const [data, setData] = useState({
-        ...currentUser,
-        qualities: getQualities(currentUser.qualities),
-        profession: getProfessionById(currentUser.profession)
-    });
-    console.log(errors);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        const newData = {
+        await updateUserData({
             ...data,
             qualities: data.qualities.map((q) => q.value)
-        };
+        });
+        history.push(`/users/${currentUser._id}`);
+    };
 
-        try {
-            await updateUserData(newData);
-            history.push(`/users/${data._id}`);
-        } catch (error) {
-            setErrors(error);
+    function getQualitiesListByIds(qualitiesIds) {
+        const qualitiesArray = [];
+        for (const qualId of qualitiesIds) {
+            for (const quality of qualities) {
+                if (quality._id === qualId) {
+                    qualitiesArray.push(quality);
+                    break;
+                }
+            }
         }
-    };
+        return qualitiesArray;
+    }
     const transformData = (data) => {
-        return data.map((qual) => ({ label: qual.name, value: qual._id }));
+        const result = getQualitiesListByIds(data).map((qual) => ({
+            label: qual.name,
+            value: qual._id
+        }));
+        return result;
     };
-    const professionsList = transformData(professions);
-    const qualitiesList = transformData(qualities);
 
     useEffect(() => {
-        if (data._id) setIsLoading(false);
+        if (!qualitiesLoading && !professionsLoading && currentUser && !data) {
+            setData({
+                ...currentUser,
+                qualities: transformData(currentUser.qualities)
+            });
+        }
+    }, [professionsLoading, qualitiesLoading, currentUser, data]);
+
+    useEffect(() => {
+        if (data && isLoading) {
+            setIsLoading(false);
+        }
     }, [data]);
 
     const validatorConfig = {

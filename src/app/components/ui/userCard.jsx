@@ -2,19 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { useQualities } from "../../hooks/useQualities";
-import { useProfessions } from "../../hooks/useProfession";
 
 const UserCard = ({ user }) => {
     const { currentUser } = useAuth();
-    const { qualities } = useQualities();
-    const { professions } = useProfessions();
     const history = useHistory();
     const handleClick = () => {
-        if (professions && qualities) {
-            history.push(history.location.pathname + "/edit");
-        }
+        history.push(history.location.pathname + "/edit");
     };
+
     return (
         <div className="card mb-3">
             <div className="card-body">
