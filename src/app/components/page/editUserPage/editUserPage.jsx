@@ -21,7 +21,6 @@ const EditUserPage = () => {
         label: q.name,
         value: q._id
     }));
-    console.log(data);
 
     const { professions, isLoading: professionsLoading } = useProfessions();
     const professionsList = professions.map((p) => ({
