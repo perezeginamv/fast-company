@@ -24,6 +24,7 @@ const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState();
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(true);
+    console.log(error);
 
     const history = useHistory();
 
