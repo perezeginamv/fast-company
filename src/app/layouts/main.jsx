@@ -5,7 +5,6 @@ const Main = () => {
     const { error, initialize, progress, status } = useMockData();
     const handleClick = () => {
         initialize();
-        console.log(progress, error, status);
     };
     return (
         <div className="container mt-5">

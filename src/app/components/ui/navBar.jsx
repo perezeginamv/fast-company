@@ -27,7 +27,11 @@ const NavBar = () => {
                     {currentUser ? (
                         <NavProfile />
                     ) : (
-                        <Link className=" nav-link" to="/login">
+                        <Link
+                            className=" nav-link"
+                            aria-current="page"
+                            to="/login"
+                        >
                             Login
                         </Link>
                     )}
