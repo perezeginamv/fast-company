@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxFieald from "../common/form/checkBoxField";
-import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logIn } from "../../store/users";
 // import * as yup from "yup"; // библиотека YUP
 
 const LoginForm = () => {
@@ -23,7 +24,8 @@ const LoginForm = () => {
         }));
         setEnterError(null);
     };
-    const { logIn } = useAuth();
+    const dispatch = useDispatch();
+
     // Пример валидации на библиотеке YUP
     // const validateSchema = yup.object().shape({
     //     password: yup
@@ -78,21 +80,14 @@ const LoginForm = () => {
     };
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-
-        try {
-            await logIn(data);
-            history.push(
-                history.location.state.from.pathname
-                    ? history.location.state.from.pathname
-                    : "/"
-            );
-        } catch (error) {
-            setEnterError(error.message);
-        }
+        const redirect = history.location.state
+            ? history.location.state.from.pathname
+            : "/";
+        dispatch(logIn({ payload: data, redirect }));
     };
     return (
         <form onSubmit={handleSubmit}>
