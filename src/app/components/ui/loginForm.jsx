@@ -3,26 +3,25 @@ import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxFieald from "../common/form/checkBoxField";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logIn } from "../../store/users";
+import { useDispatch, useSelector } from "react-redux";
+import { getAuthErrors, logIn } from "../../store/users";
 // import * as yup from "yup"; // библиотека YUP
 
 const LoginForm = () => {
-    const history = useHistory();
     const [data, setDate] = useState({
         email: "",
         password: "",
         stayOn: false
     });
     const [errors, setErrors] = useState({});
-    const [enterError, setEnterError] = useState(null);
+    const history = useHistory();
+    const loginError = useSelector(getAuthErrors());
 
     const handleChange = (target) => {
         setDate((prevState) => ({
             ...prevState,
             [target.name]: target.value
         }));
-        setEnterError(null);
     };
     const dispatch = useDispatch();
 
@@ -113,9 +112,9 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxFieald>
-            {enterError && <p className="text-danger">{enterError}</p>}
+            {loginError && <p className="text-danger">{loginError}</p>}
             <button
-                disabled={!isValid || enterError}
+                disabled={!isValid}
                 className="btn btn-primary w-100 mx-auto"
             >
                 Submit
