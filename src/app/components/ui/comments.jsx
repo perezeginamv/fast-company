@@ -1,26 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { orderBy } from "lodash";
 import { AddCommentForm, CommentList } from "../common/comments";
 import { useComments } from "../../hooks/useComments";
-// import CommentList from "../common/comments/commentList";
-// import AddCommentForm from "../common/comments/addCommentForm";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    getComments,
+    getCommentsLoadingStatus,
+    loadCommentsList
+} from "../../store/comments";
+import { useParams } from "react-router-dom";
 
 const Comments = () => {
-    const { createComment, comments, removeComment } = useComments();
+    const { userId } = useParams();
+    console.log(userId);
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(loadCommentsList(userId));
+    }, [userId]);
+    const isLoading = useSelector(getCommentsLoadingStatus());
+    const comments = useSelector(getComments());
+    const { createComment, removeComment } = useComments();
 
     const handleSubmit = (data) => {
         createComment(data);
-        // api.comments
-        //     .add({ ...data, pageId: userId })
-        //     .then((data) => setComments([...comments, data]));
     };
 
     const handleRemoveComment = (id) => {
         removeComment(id);
-
-        // api.comments.remove(id).then((id) => {
-        //     setComments(comments.filter((x) => x._id !== id));
-        // });
     };
     const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
 
@@ -36,10 +43,14 @@ const Comments = () => {
                     <div className="card-body">
                         <h2>Comments</h2>
                         <hr />
-                        <CommentList
-                            comments={sortedComments}
-                            onRemove={handleRemoveComment}
-                        />
+                        {!isLoading ? (
+                            <CommentList
+                                comments={sortedComments}
+                                onRemove={handleRemoveComment}
+                            />
+                        ) : (
+                            "Loading...."
+                        )}
                     </div>
                 </div>
             )}
