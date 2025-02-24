@@ -60,8 +60,6 @@ const usersSlice = createSlice({
             state.dataLoaded = false;
         },
         userUpdateSuccessed: (state, action) => {
-            console.log(action);
-
             state.entities[
                 state.entities.findIndex((u) => u._id === action.payload._id)
             ] = action.payload;
