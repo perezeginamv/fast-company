@@ -9,7 +9,6 @@ import { getUserById } from "../../../store/users";
 
 const UserPage = ({ userId }) => {
     const user = useSelector(getUserById(userId));
-    console.log(userId);
 
     if (user) {
         return (
