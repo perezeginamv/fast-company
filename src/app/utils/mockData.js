@@ -11,6 +11,8 @@ const useMockData = () => {
         successed: "Ready",
         error: "Error occured"
     };
+    console.log(error);
+
     const [error, setError] = useState(null);
     const [status, setStatus] = useState(statusConsts.idle);
     const [progress, setProgress] = useState(0);
