@@ -1,4 +1,4 @@
 {
-    "apiEndpoint": "https://fast-company-firebase-e2988-default-rtdb.europe-west1.firebasedatabase.app",
-    "isFireBase": true
+    "apiEndpoint": "https://localhost:8080/api",
+    "isFireBase": false
 }
