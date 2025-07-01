@@ -11,9 +11,9 @@ const http = axios.create({
 
 http.interceptors.request.use(
     async function (config) {
-        const expireDate = localStorageService.getTokenExpiresDate();
+        const expiresDate = localStorageService.getTokenExpiresDate();
         const refreshToken = localStorageService.getRefreshToken();
-        const isExpired = refreshToken && expireDate < Date.now();
+        const isExpired = refreshToken && expiresDate < Date.now();
 
         if (configFile.isFireBase) {
             const containSlash = /\/$/gi.test(config.url);
@@ -21,7 +21,7 @@ http.interceptors.request.use(
                 (containSlash ? config.url.slice(0, -1) : config.url) + ".json";
 
             if (isExpired) {
-                const { data } = await authService.refresh();
+                const data = await authService.refresh();
                 localStorageService.setTokens({
                     refreshToken: data.refresh_token,
                     idToken: data.id_token,
@@ -35,7 +35,7 @@ http.interceptors.request.use(
             }
         } else {
             if (isExpired) {
-                const { data } = await authService.refresh();
+                const data = await authService.refresh();
                 localStorageService.setTokens(data);
             }
             const accessToken = localStorageService.getAccesToken();
@@ -64,6 +64,7 @@ http.interceptors.response.use(
         if (configFile.isFireBase) {
             res.data = { content: transformData(res.data) };
         }
+        res.data = { content: res.data };
         return res;
     },
     function (error) {
@@ -73,7 +74,7 @@ http.interceptors.response.use(
             error.response.status < 500;
 
         if (!expectedErrors) {
-            console.log(error);
+            // console.log(error);
             toast.error("Something was wrong. Try it later");
         }
         return Promise.reject(error);
