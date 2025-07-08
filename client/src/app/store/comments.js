@@ -1,7 +1,5 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 import commentService from "../services/comment.service";
-import { nanoid } from "nanoid";
-import { getCurrentUserId } from "./users";
 
 const commentsSlice = createSlice({
     name: "comments",
@@ -56,15 +54,9 @@ export const loadCommentsList = (userId) => async (dispatch) => {
     }
 };
 export const createComment = (payload) => async (dispatch, getState) => {
-    const comment = {
-        ...payload,
-        _id: nanoid(),
-        created_at: Date.now(),
-        userId: getCurrentUserId()(getState())
-    };
     dispatch(addCommentRequested(payload));
     try {
-        const { content } = await commentService.createComment(comment);
+        const { content } = await commentService.createComment(payload);
         dispatch(commentCreated(content));
     } catch (error) {
         dispatch(commentsRequestFiled(error.message));
@@ -75,7 +67,7 @@ export const removeComment = (commentId) => async (dispatch) => {
     dispatch(removeCommentRequested(commentId));
     try {
         const { content } = await commentService.removeComment(commentId);
-        if (content === null) {
+        if (!content) {
             dispatch(commentRemoved(commentId));
         }
     } catch (error) {
