@@ -54,7 +54,7 @@ export const loadCommentsList = (userId) => async (dispatch) => {
     }
 };
 export const createComment = (payload) => async (dispatch, getState) => {
-    dispatch(addCommentRequested(payload));
+    dispatch(addCommentRequested());
     try {
         const { content } = await commentService.createComment(payload);
         dispatch(commentCreated(content));
@@ -64,7 +64,7 @@ export const createComment = (payload) => async (dispatch, getState) => {
 };
 
 export const removeComment = (commentId) => async (dispatch) => {
-    dispatch(removeCommentRequested(commentId));
+    dispatch(removeCommentRequested());
     try {
         const { content } = await commentService.removeComment(commentId);
         if (!content) {

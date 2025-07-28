@@ -4,7 +4,6 @@ const commentEndpoint = "comment/";
 
 const commentService = {
     createComment: async (payload) => {
-        console.log(payload);
         const { data } = await httpService.post(commentEndpoint, payload);
         return data;
     },
