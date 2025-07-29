@@ -47,9 +47,6 @@ const usersSlice = createSlice({
             state.error = action.payload;
         },
         userCreated: (state, action) => {
-            if (!Array.isArray(state.entities)) {
-                state.entities = [];
-            }
             state.entities.push(action.payload);
         },
         userLoggedOut: (state) => {
@@ -80,16 +77,6 @@ const {
     userUpdateSuccessed
 } = actions;
 
-export const loadUsersList = () => async (dispatch) => {
-    dispatch(usersRequested());
-    try {
-        const { content } = await userService.get();
-        dispatch(usersReceved(content));
-    } catch (error) {
-        dispatch(usersRequestFiled(error.message));
-    }
-};
-
 const authRequested = createAction("users/authRequested");
 const userUpdateFailed = createAction("users/userUpdateFailed");
 const userUpdateRequested = createAction("users/userUpdateRequested");
@@ -101,8 +88,8 @@ export const logIn =
         dispatch(authRequested());
         try {
             const data = await authService.login({ email, password });
-            dispatch(authRequestSuccess({ userId: data.localId }));
             localStorageService.setTokens(data);
+            dispatch(authRequestSuccess({ userId: data.userId }));
             history.push(redirect);
         } catch (error) {
             const { code, message } = error.response.data.error;
@@ -132,6 +119,16 @@ export const logOut = () => (dispatch) => {
     history.push("/");
 };
 
+export const loadUsersList = () => async (dispatch) => {
+    dispatch(usersRequested());
+    try {
+        const { content } = await userService.get();
+        dispatch(usersReceved(content));
+    } catch (error) {
+        dispatch(usersRequestFiled(error.message));
+    }
+};
+
 export const updateUserData = (payload) => async (dispatch) => {
     dispatch(userUpdateRequested());
     try {
@@ -143,17 +140,18 @@ export const updateUserData = (payload) => async (dispatch) => {
     }
 };
 export const getUsersList = () => (state) => state.users.entities;
-export const getUserById = (userId) => (state) => {
-    if (state.users.entities) {
-        return state.users.entities.find((user) => user._id === userId);
-    }
-};
 
 export const getCurrentUserData = () => (state) => {
     return state.users.entities
         ? state.users.entities.find((u) => u._id === state.users.auth.userId)
         : null;
 };
+export const getUserById = (userId) => (state) => {
+    if (state.users.entities) {
+        return state.users.entities.find((user) => user._id === userId);
+    }
+};
+
 export const getCurrentUserId = () => (state) => state.users.auth.userId;
 export const getIsLoggedIn = () => (state) => state.users.isLoggedIn;
 export const getDataStatus = () => (state) => state.users.dataLoaded;

@@ -15,7 +15,6 @@ const commentsSlice = createSlice({
         commentsReceved: (state, action) => {
             state.entities = action.payload;
             state.isLoading = false;
-            state.lastFetch = Date.now();
         },
         commentsRequestFiled: (state, action) => {
             state.error = action.payload;
