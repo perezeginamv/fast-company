@@ -13,9 +13,10 @@ const LoginForm = () => {
         password: "",
         stayOn: false
     });
-    const [errors, setErrors] = useState({});
-    const history = useHistory();
     const loginError = useSelector(getAuthErrors());
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const [errors, setErrors] = useState({});
 
     const handleChange = (target) => {
         setDate((prevState) => ({
@@ -23,7 +24,6 @@ const LoginForm = () => {
             [target.name]: target.value
         }));
     };
-    const dispatch = useDispatch();
 
     // Пример валидации на библиотеке YUP
     // const validateSchema = yup.object().shape({
