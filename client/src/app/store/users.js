@@ -3,7 +3,7 @@ import localStorageService from "../services/localStorage.service";
 import userService from "../services/user.service";
 import authService from "../services/auth.service";
 import history from "../utils/history";
-import generateAuthError from "../utils/generateAuthError";
+import { generateAuthError } from "../utils/generateAuthError";
 
 const initialState = localStorageService.getAccesToken()
     ? {
