@@ -107,7 +107,6 @@ const RegisterForm = () => {
         };
         dispatch(signUp(newData));
     };
-
     return (
         <form onSubmit={handleSubmit}>
             <TextField
@@ -167,6 +166,7 @@ const RegisterForm = () => {
             >
                 Подтвердить <a>лицензионное соглашение</a>
             </CheckBoxField>
+
             <button
                 className="btn btn-primary w-100 mx-auto"
                 type="submit"
